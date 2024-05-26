@@ -25,4 +25,8 @@ $v= $r->validate([
 OrderModel::create($v);
 return redirect('/');
     }
+
+public function myorders(){
+    return view('client.myorder',['data'=> OrderModel::where('userid',Auth()->user()->id)->get(),]);
+}
 }
