@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderModel;
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
 
@@ -49,4 +50,29 @@ class AdminController extends Controller
        $model->update($v);
        return redirect()->back()->with('success','success update product!');
     }
+    public function pending(){
+        return view('admin.pending',['data' => OrderModel::all(),]);
+    }
+    public function setorderproduct(OrderModel $id){
+$id->status = 'inOrder';
+$id->save();
+       return redirect('/admin/orders')->with('success','success update product!');
+    }
+    public function setrejectproduct(OrderModel $id){
+        $id->status = 'Rejected';
+        $id->save();
+               return redirect('/admin/pending')->with('success','success update product!');
+            }
+            public function setcompleteproduct(OrderModel $id){
+                $id->status = 'Complete';
+                $id->save();
+                       return redirect('/admin/pending')->with('success','success update product!');
+                    }
+            public function orders(){
+                $data =OrderModel::where('status', 'inOrder')->get();
+                if(empty($data)){
+                    $data = [];
+                }
+                return view('admin.orders',['data' => $data]);
+            }
 }
